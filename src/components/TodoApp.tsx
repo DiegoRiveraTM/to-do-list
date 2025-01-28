@@ -6,7 +6,11 @@ export interface TodoI {
     id: number;
 }
 
-export default function TodoApp() {
+interface TodoAppProps {
+    isDarkMode: boolean;
+}
+
+export default function TodoApp({ isDarkMode }: TodoAppProps) {
     const [todo, setTodo] = useState<TodoI>({ title: '', id: 0 });
     const [todos, setTodos] = useState<TodoI[]>([]);
 
@@ -16,7 +20,7 @@ export default function TodoApp() {
 
     const onEnter = () => {
         if (todo.title.trim() === '') return;
-        const id = Math.floor(Math.random() * 100);
+        const id = Math.floor(Math.random() * 1000);  // Increase the range to reduce the chance of duplicate IDs
         setTodos([...todos, { title: todo.title, id }]);
         setTodo({ title: '', id: 0 });
     };
@@ -27,21 +31,21 @@ export default function TodoApp() {
     };
 
     return (
-        <div className="d-flex align-items-center mt-5 flex-column">
+        <div className={`d-flex align-items-center mt-5 flex-column ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
             <div className="flex-column shadow-sm d-flex justify-content-between" style={{ width: '500px' }}>
                 <div className="d-flex justify-content-center mb-3">
-                    <label className="text-muted me-2">Please Enter Your To-do</label>
+                    <label className={`me-2 ${isDarkMode ? 'text-white' : 'text-muted'}`}>Please Enter Your To-do</label>
                     <input 
                         value={todo.title} 
                         onChange={onChange} 
                         placeholder='To-do' 
-                        className='rounded p-2 me-2 '
+                        className={`rounded p-2 me-2 ${isDarkMode ? 'text-black' : 'text-black'}`}
                     />
                     {todo.title && (
                         <button onClick={onEnter} className="btn btn-primary">Enter</button>
                     )}
                 </div>
-                <TodoList todos={todos} deleteTodo={deleteTodo} />
+                <TodoList todos={todos} deleteTodo={deleteTodo} isDarkMode={isDarkMode} />
             </div>
         </div>
     );
